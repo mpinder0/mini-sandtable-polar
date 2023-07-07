@@ -31,5 +31,14 @@ Translate move pattern points into time-based intermediate/ step based moves
 """
 
 class motion_planner:
-    def __init__(self):
+
+    motors = None
+
+    def __init__(self, motors):
+        self.motors = motors
+
+    def load_pattern():
+        pass
+
+    def play():
         pass
