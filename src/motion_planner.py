@@ -51,8 +51,8 @@ class motion_planner:
 
     def __init__(self, motors):
         self.motors = motors
-        AXIS_STEPS_SPEED_T = _motor_steps_per_time_step(TIME_STEP_S, AXIS_STEP_T, AXIS_SPEED_T)
-        AXIS_STEPS_SPEED_R = _motor_steps_per_time_step(TIME_STEP_S, AXIS_STEP_R, AXIS_SPEED_R)
+        AXIS_STEPS_SPEED_T = self._motor_steps_per_time_step(TIME_STEP_S, AXIS_STEP_T, AXIS_SPEED_T)
+        AXIS_STEPS_SPEED_R = self._motor_steps_per_time_step(TIME_STEP_S, AXIS_STEP_R, AXIS_SPEED_R)
 
     def load_pattern(self):
         pass
