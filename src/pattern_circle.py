@@ -1,42 +1,34 @@
 
 """
-Generate spiral
-Start at 0, spiral clockwise outward until axis max reached.
-
-Given
-Axis max - rho
-Rho increment rate, mm per full rotation
-Theta step size - probaby multiples of axis step size.
+Generate circle
+Increment theta clockwise until rotations count reached.
+Rho position is always 0.
 """
 
-T_DEG_PER_STEP = 1
+T_FULL_ROTATION = 2 * 3.141592653589793  # Full rotation in radians - 2pi
+T_RAD_PER_STEP = T_FULL_ROTATION / 100
 
-R_AXIS_MAX = 10
-R_INCREMENT_RATE_COMPLETE = 1 # mm per rotation
+R_POS = 0 # Fixed rho position for circle
 
-R_INCREMENT_RATE_STEP = R_INCREMENT_RATE_COMPLETE / (360 * T_DEG_PER_STEP)
-
-class pattern_spiral:
+class pattern_circle:
     
     pattern = []
     
-    def __init__(self):
-        self._generate()
+    def __init__(self, n_rotations):
+        self._generate(n_rotations)
     
-    def _generate(self):
+    def _generate(self, n_rotations):
         t_pos = 0
-        r_pos = 0
-        if R_INCREMENT_RATE_STEP > 0:
-            while r_pos < R_AXIS_MAX:
-                t_pos += T_DEG_PER_STEP
-                r_pos += R_INCREMENT_RATE_STEP
-                self.pattern.append((t_pos, r_pos))
+        t_pos_target = n_rotations * T_FULL_ROTATION
+        while t_pos < t_pos_target:
+            t_pos += T_RAD_PER_STEP
+            self.pattern.append((t_pos, R_POS))
 
     def get_pattern(self):
         return self.pattern
 
 
 if __name__ == "__main__":
-    p = pattern_spiral()
+    p = pattern_circle()
     for move in p.get_pattern():
         print(move)
