@@ -2,11 +2,14 @@ import unittest
 import sys
 sys.path.insert(0, "../src/")
 from motion_planner import motion_planner
+from motor_control_mock import motor_control_mock
 
 class TestConstants(unittest.TestCase):
+    motors = None
     planner = None
     
     def setUp(self):
+        self.motors = motor_control_mock()
         self.planner = motion_planner(None)
     
     def test_motor_steps_per_time_step(self):

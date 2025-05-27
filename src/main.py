@@ -24,6 +24,5 @@ planner = motion_planner(motors)
 
 spiral = pattern_spiral()
 pattern = spiral.get_pattern()
-planner.load_pattern(pattern)
 
-planner.play()
+planner.play(pattern)

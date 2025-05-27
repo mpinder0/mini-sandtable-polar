@@ -24,6 +24,14 @@ class motor_control:
         direction = stepper.BACKWARD if reverse else stepper.FORWARD
         motor.onestep(direction=direction, style=stepper.MICROSTEP)
 
+    def step(self, axis, reverse=False):
+        if axis == axis.THETA:
+            self.theta_step(reverse)
+        elif axis == axis.RHO:
+            self.rho_step(reverse)
+        else:
+            raise ValueError("Invalid axis. Use 'axis.THETA' or 'axis.RHO'.")
+
     def theta_step(self, reverse=False):
         m = self.kit.stepper1
         self._stepper_step(m, reverse)
