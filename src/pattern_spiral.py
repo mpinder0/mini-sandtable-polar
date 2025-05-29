@@ -16,7 +16,7 @@ R_INCREMENT_RATE_COMPLETE = 1 # mm per rotation
 
 R_INCREMENT_RATE_STEP = R_INCREMENT_RATE_COMPLETE / (360 * T_DEG_PER_STEP)
 
-class pattern_spiral:
+class PatternSpiral:
     
     pattern = []
     
@@ -37,6 +37,6 @@ class pattern_spiral:
 
 
 if __name__ == "__main__":
-    p = pattern_spiral()
+    p = PatternSpiral()
     for move in p.get_pattern():
         print(move)

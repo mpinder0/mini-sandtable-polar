@@ -9,7 +9,7 @@ class direction(Enum):
     BACKWARD = 2
 
 AXIS_MAX_R = 10.0 # mm, min always 0
-TIME_STEP_S = 0.5
+TIME_STEP_S = 0.05 # seconds, 50 ms time step for the motion planner
 
 # axis gearing
 AXIS_GEAR_RATIO_T = 6 # 6:1 gear ratio

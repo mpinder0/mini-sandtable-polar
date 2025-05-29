@@ -15,14 +15,14 @@
     - (callback?) execute motor action
 """
 
-import motor_control
-import motion_planner
-import pattern_spiral
+from motor_control import MotorControl
+from motion_planner import MotionPlanner
+from pattern_spiral import PatternSpiral
 
-motors = motor_control()
-planner = motion_planner(motors)
+motors = MotorControl()
+planner = MotionPlanner(motors)
 
-spiral = pattern_spiral()
+spiral = PatternSpiral()
 pattern = spiral.get_pattern()
 
 planner.play(pattern)

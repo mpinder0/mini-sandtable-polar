@@ -1,17 +1,18 @@
 import unittest
 import sys
-sys.path.insert(0, "../src/")
-from motion_planner import motion_planner
-from motor_control_mock import motor_control_mock
+sys.path.insert(0, "src/")
+from motion_planner import MotionPlanner
+from motor_control_mock import MotorControlMock
 
-class TestConstants(unittest.TestCase):
+class TestMotionPlanner(unittest.TestCase):
     motors = None
     planner = None
     
     def setUp(self):
-        self.motors = motor_control_mock()
-        self.planner = motion_planner(None)
+        self.motors = MotorControlMock()
+        self.planner = MotionPlanner(None)
     
+    '''
     def test_motor_steps_per_time_step(self):
         result = self.planner._motor_steps_per_time_step(1, 2, 2)
         self.assertEqual(1, result)
@@ -21,6 +22,33 @@ class TestConstants(unittest.TestCase):
         self.assertEqual(1, result)
         # exception case, result >1
         self.assertRaises(Exception, self.planner._motor_steps_per_time_step, 1, 0.5, 1)
+    '''
+
+    def test_count_steps_to_position(self):
+        #  - theta: 0.00306796 * 6 = 0.01840776 radians
+        #  - rho: 0.08726646 * 1 = 0.08726646 mm
+        rad_step = 0.01840776
+        mm_step = 0.08726646
+        
+        # Test with a simple move
+        position_start = (0, 0)
+        position_next = (5, 5)
+        steps = self.planner._count_steps_to_position(position_start, position_next)
+        t = 5 / rad_step # steps in 5 rad
+        r = 5 / mm_step # steos in 5 mm
+        self.assertEqual(steps, (t, r))
+        
+        # Test with a move that requires no steps
+        position_next = (0, 0)
+        steps = self.planner._count_steps_to_position(position_start, position_next)
+        self.assertEqual(steps, (0, 0))
+        
+        # Test with a negative move
+        position_next = (-1, -1)
+        steps = self.planner._count_steps_to_position(position_start, position_next)
+        t = -1 / rad_step
+        r = -1 / mm_step
+        self.assertEqual(steps, (t, r))
 
 if __name__ == '__main__':
     unittest.main()

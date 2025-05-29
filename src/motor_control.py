@@ -9,7 +9,7 @@ stepper 2 - rho control
 from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
 
-class motor_control:
+class MotorControl:
     
     kit = None
     

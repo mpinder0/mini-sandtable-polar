@@ -1,4 +1,4 @@
-class motor_control_mock:
+class MotorControlMock:
     
     def __init__(self):
         pass

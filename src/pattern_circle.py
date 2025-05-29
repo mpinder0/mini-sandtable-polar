@@ -2,7 +2,7 @@
 """
 Generate circle
 Increment theta clockwise until rotations count reached.
-Rho position is always 0.
+Rho position is always static.
 """
 
 import constants as c
@@ -12,7 +12,7 @@ T_RAD_PER_STEP = T_FULL_ROTATION / 100
 
 R_POS = 5 # Fixed rho position for circle
 
-class pattern_circle:
+class PatternCircle:
     
     pattern = []
     
@@ -31,7 +31,7 @@ class pattern_circle:
 
 
 if __name__ == "__main__":
-    p = pattern_circle(10)
+    p = PatternCircle(10)
     for move in p.get_pattern():
         print(move)
 

@@ -32,10 +32,9 @@ Translate move pattern points into time-based intermediate/ step based moves
 
 import math
 import time
-from motor_control import *
 from constants import *
 
-class motion_planner:
+class MotionPlanner:
 
     motors = None
     current_position = (0, 0) # (theta, rho)
