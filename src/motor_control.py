@@ -14,7 +14,7 @@ class motor_control:
     kit = None
     
     def __init__(self):
-        self.kit = MotorKit(i2c=board.I2C(), steppers_microsteps=4)
+        self.kit = MotorKit(i2c=board.I2C())
 
     def motors_release(self):
         self.kit.stepper1.release()
@@ -22,7 +22,7 @@ class motor_control:
     
     def _stepper_step(self, motor, reverse=False):
         direction = stepper.BACKWARD if reverse else stepper.FORWARD
-        motor.onestep(direction=direction, style=stepper.MICROSTEP)
+        motor.onestep(direction=direction, style=stepper.SINGLE)
 
     def step(self, axis, reverse=False):
         if axis == axis.THETA:
