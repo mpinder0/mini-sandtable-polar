@@ -5,10 +5,12 @@ Increment theta clockwise until rotations count reached.
 Rho position is always 0.
 """
 
+import constants as c
+
 T_FULL_ROTATION = 2 * 3.141592653589793  # Full rotation in radians - 2pi
 T_RAD_PER_STEP = T_FULL_ROTATION / 100
 
-R_POS = 0 # Fixed rho position for circle
+R_POS = 5 # Fixed rho position for circle
 
 class pattern_circle:
     
@@ -29,6 +31,10 @@ class pattern_circle:
 
 
 if __name__ == "__main__":
-    p = pattern_circle()
+    p = pattern_circle(10)
     for move in p.get_pattern():
         print(move)
+
+    count = len(p.get_pattern())
+    print(str(count) + " moves generated.")
+    print("will take " + str(count * c.TIME_STEP_S) + " seconds to execute.")
