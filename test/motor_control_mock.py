@@ -1,5 +1,8 @@
 class MotorControlMock:
     
+    theta_count = 0
+    rho_count = 0
+
     def __init__(self):
         pass
 
@@ -15,7 +18,13 @@ class MotorControlMock:
             raise ValueError("Invalid axis. Use 'axis.THETA' or 'axis.RHO'.")
 
     def theta_step(self, reverse=False):
-        print("t", "-" if reverse else "+")
+        if not reverse:
+            self.theta_count += 1
+        else:
+            self.theta_count -= 1
 
     def rho_step(self, reverse=False):
-        print("r", "-" if reverse else "+")
+        if not reverse:
+            self.rho_count += 1
+        else:
+            self.rho_count -= 1

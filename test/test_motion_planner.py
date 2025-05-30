@@ -1,6 +1,7 @@
 import unittest
 import sys
 sys.path.insert(0, "src/")
+from constants import axis, direction
 from motion_planner import MotionPlanner
 from motor_control_mock import MotorControlMock
 
@@ -10,7 +11,7 @@ class TestMotionPlanner(unittest.TestCase):
     
     def setUp(self):
         self.motors = MotorControlMock()
-        self.planner = MotionPlanner(None)
+        self.planner = MotionPlanner(self.motors)
     
     '''
     def test_motor_steps_per_time_step(self):
@@ -49,6 +50,28 @@ class TestMotionPlanner(unittest.TestCase):
         t = -1 / rad_step
         r = -1 / mm_step
         self.assertEqual(steps, (t, r))
+
+    def test_play_one_axis_steps(self):
+        # Theta axis 2 steps forward
+        x = axis.THETA
+        d = direction.FORWARD
+        gear_ratio = 2
+        self.planner._play_one_axis_step(x, d, gear_ratio)
+        self.assertEqual(self.motors.theta_count, 2)
+        # Theta axis 2 steps backward
+        d = direction.BACKWARD
+        self.planner._play_one_axis_step(x, d, gear_ratio)
+        self.assertEqual(self.motors.theta_count, 0)
+        # Theta axis 2 more steps backward
+        self.planner._play_one_axis_step(x, d, gear_ratio)
+        self.assertEqual(self.motors.theta_count, -2)
+
+        # Rho axis 2 steps forward
+        x = axis.RHO
+        d = direction.FORWARD
+        gear_ratio = 6
+        self.planner._play_one_axis_step(x, d, gear_ratio)
+        self.assertEqual(self.motors.rho_count, 6)
 
 if __name__ == '__main__':
     unittest.main()
