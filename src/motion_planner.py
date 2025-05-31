@@ -146,6 +146,12 @@ class MotionPlanner:
 
 
     def play_move(self, move):
+        '''
+        params
+        move - dict:
+            axis_steps_list - list of tuples (theta, rho) contraining step True/False for each time step
+            directions - tuple F/R for each axis
+        '''
         axis_steps_list = move['axis_steps_list']
         directions = move['directions']
 
