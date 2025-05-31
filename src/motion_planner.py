@@ -50,7 +50,10 @@ class MotionPlanner:
 
     def reference_routine(self):
         # routine to seek reference position for (0,0)
-        pass
+        #
+        # Todo: seek reference sensor
+        #
+        self.current_position = (0, 0)
 
     def _count_steps_to_position(self, position, position_next):
         # subtract current position from target position
@@ -116,25 +119,28 @@ class MotionPlanner:
         }
         return result_dict
 
-    def _play_one_axis_step(self, axis, direction, gear_ratio):
-        is_reverse = direction != direction.FORWARD
+    def _play_one_axis_step(self, axis, dir, gear_ratio):
+        is_reverse = dir != direction.FORWARD
         for i in range(int(gear_ratio)):
             self.motors.step(axis, is_reverse)
 
-    def _play_both_axis_step(self, direction, step):
-        rho_count = 1 if step[1] else 0
-        rho_direction = direction[1] if step[1] else direction[0]
-
+    def _play_both_axis_step(self, dir, step):
+        rho_count = 0
+        
         if step[0]:
-            self._play_one_axis_step(axis.THETA, direction[0], AXIS_GEAR_RATIO_T)
-            # axis coupled, so rho must also step
-            if direction[0] == direction[1]:
-                # FF or RR   
-                rho_count += 1
-            else:
-                # FR or RF
+            self._play_one_axis_step(axis.THETA, dir[0], AXIS_GEAR_RATIO_T)
+            # axis coupled, so rho must also step.
+            # rho -1 for each theta +1 and vice versa
+            if dir[0] == direction.FORWARD:
                 rho_count -= 1
+            else:
+                rho_count += 1
+        
+        if step[1]:
+            rho_count += 1 if dir[1] == direction.FORWARD else -1
 
+        rho_direction = direction.FORWARD if rho_count >= 0 else direction.BACKWARD
+        rho_count = abs(rho_count)
         for i in range(rho_count):
             self._play_one_axis_step(axis.RHO, rho_direction, AXIS_GEAR_RATIO_R)
 
@@ -165,7 +171,7 @@ if __name__ == "__main__":
     print("Axis speed (unit/s): {}, {}".format(AXIS_SPEED_T, AXIS_SPEED_R))
     print("Axis step rate (steps/time step): {}, {}".format(AXIS_STEP_RATE_T, AXIS_STEP_RATE_R))
 
-    p = motion_planner(None)
+    p = MotionPlanner(None)
     print(p._count_steps_to_position((0, 0),(2, 10)))
 
     print(p.get_steps_for_move((0, 0), (2, 10)))

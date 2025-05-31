@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.insert(0, "src/")
-from constants import axis, direction
+from constants import *
 from motion_planner import MotionPlanner
 from motor_control_mock import MotorControlMock
 
@@ -51,7 +51,7 @@ class TestMotionPlanner(unittest.TestCase):
         r = -1 / mm_step
         self.assertEqual(steps, (t, r))
 
-    def test_play_one_axis_steps(self):
+    def test_play_one_axis_step(self):
         # Theta axis 2 steps forward
         x = axis.THETA
         d = direction.FORWARD
@@ -72,6 +72,79 @@ class TestMotionPlanner(unittest.TestCase):
         gear_ratio = 6
         self.planner._play_one_axis_step(x, d, gear_ratio)
         self.assertEqual(self.motors.rho_count, 6)
+
+    def test_play_both_axis_steps(self):
+        step_multiplier = (AXIS_GEAR_RATIO_T, AXIS_GEAR_RATIO_R)
+        results = {"FF": (1, 0),
+                   "FR": (1, -2),
+                   "RF": (-1, 2),
+                   "RR": (-1, 0),
+                   "FX": (1, -1),
+                   "RX": (-1, 1),
+                   "XF": (0, 1),
+                   "XR": (0, -1),
+                   "XX": (0, 0)}
+        # unzip theta and rho into separate lists
+        r_list_t, r_list_r = zip(*results.values())
+        r_list_t = [x * step_multiplier[0] for x in list(r_list_t)]
+        r_list_r = [x * step_multiplier[1] for x in list(r_list_r)]
+        print("theta:", r_list_t)
+        print("rho:", r_list_r)
+
+        # FF
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[0])
+        self.assertEqual(self.motors.rho_count, r_list_r[0])
+        # FR
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.FORWARD, direction.BACKWARD), (True, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[1])
+        self.assertEqual(self.motors.rho_count, r_list_r[1])
+        # RF
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.BACKWARD, direction.FORWARD), (True, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[2])
+        self.assertEqual(self.motors.rho_count, r_list_r[2])
+        # RR
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[3])
+        self.assertEqual(self.motors.rho_count, r_list_r[3])
+        # FX
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
+        self.assertEqual(self.motors.theta_count, r_list_t[4])
+        self.assertEqual(self.motors.rho_count, r_list_r[4])
+        # RX
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, False))
+        self.assertEqual(self.motors.theta_count, r_list_t[5])
+        self.assertEqual(self.motors.rho_count, r_list_r[5])
+        # XF
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[6])
+        self.assertEqual(self.motors.rho_count, r_list_r[6])
+        # XR
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (False, True))
+        self.assertEqual(self.motors.theta_count, r_list_t[7])
+        self.assertEqual(self.motors.rho_count, r_list_r[7])
+        # XX
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, False))
+        self.assertEqual(self.motors.theta_count, r_list_t[8])
+        self.assertEqual(self.motors.rho_count, r_list_r[8])
 
 if __name__ == '__main__':
     unittest.main()
