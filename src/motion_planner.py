@@ -48,12 +48,41 @@ class MotionPlanner:
         if AXIS_STEP_RATE_R > 1:
             raise Exception(ex_string.format('Rho', AXIS_STEP_RATE_R))
 
+    def _seek_reference_sensor(self):
+        T_FULL_ROTATION = 2 * 3.141592653589793
+        T_STEP_DELAY = 0.05  # seconds
+        R_STEP_INC = 11
+
+        start_time = time.time()
+        timeout = time.delta(seconds=10)  # 10 seconds timeout for seeking reference
+
+        while time.time() - start_time < timeout:
+            # loop theta, full rotation    
+            for i in range(T_FULL_ROTATION):
+                self._play_both_axis_step(direction.FORWARD, (True, False))
+                # check for reference sensor
+                if self.motors.is_reference_sensor_triggered():
+                    return True # reference sensor found - success
+                time.sleep(T_STEP_DELAY)
+
+            # increment rho
+            for i in range(R_STEP_INC):
+                self._play_both_axis_step(direction.FORWARD, (False, True))
+        return False # reference sensor not found within timeout
+    
     def reference_routine(self):
-        # routine to seek reference position for (0,0)
-        #
-        # Todo: seek reference sensor
-        #
-        self.current_position = (0, 0)
+        # routine to seek reference position, apply offset to centre then set position to (0,0)
+        R_RETURN_TO_CENTRE = -5  # mm, distance to return rho to centre after detecting reference
+
+        found_reference = self._seek_reference_sensor()
+        if found_reference:
+            # move rho to centre
+            move = self.get_steps_for_move(self.current_position, (0, R_RETURN_TO_CENTRE))
+            self.play_move(move)
+            # this position is 0,0
+            self.current_position = (0, 0)
+        else:
+            raise Exception("Reference sensor not found. Check motor connections and sensor functionality.")
 
     def _count_steps_to_position(self, position, position_next):
         # subtract current position from target position
@@ -88,10 +117,12 @@ class MotionPlanner:
 
     def get_steps_for_move(self, position, position_next):
         '''
+        params
+            position - tuple int (theta, rho) current position
+            position_next - tuple int (theta, rho) next position
         return dict
             directions - tuple F/R for each axis
             axis_steps_list - list of tuples (theta, rho) for each time step
-        )
         '''
         # get the number of steps between current and new position
         step_counts = self._count_steps_to_position(position, position_next)

@@ -8,6 +8,9 @@ stepper 2 - rho control
 
 from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
+import RPi.GPIO as GPIO
+
+REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
 class MotorControl:
     
@@ -15,6 +18,9 @@ class MotorControl:
     
     def __init__(self):
         self.kit = MotorKit(i2c=board.I2C())
+
+        GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+        GPIO.setup(REFERENCE_SENSOR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Sensor pin set as input w/ pull-up
 
     def motors_release(self):
         self.kit.stepper1.release()
@@ -39,3 +45,7 @@ class MotorControl:
     def rho_step(self, reverse=False):
         m = self.kit.stepper1
         self._stepper_step(m, reverse)
+    
+    def is_reference_sensor_triggered(self):
+         # Sensor LOW when triggered. Low to return True.
+        return GPIO.input(REFERENCE_SENSOR_PIN) == False
