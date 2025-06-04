@@ -28,3 +28,7 @@ class MotorControlMock:
             self.rho_count += 1
         else:
             self.rho_count -= 1
+
+    def is_reference_sensor_triggered(self):
+        # Simulate the reference sensor being triggered
+        return self.rho_count > 2
