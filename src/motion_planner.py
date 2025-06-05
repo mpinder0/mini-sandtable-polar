@@ -61,7 +61,7 @@ class MotionPlanner:
         while datetime.now() - start_time < timeout:
             # loop theta, full rotation    
             for i in range(T_FULL_ROTATION_STEPS):
-                self._play_both_axis_step(direction.FORWARD, (True, False))
+                self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
                     return True # reference sensor found - success
