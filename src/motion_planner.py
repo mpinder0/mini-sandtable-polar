@@ -31,7 +31,6 @@ Translate move pattern points into time-based intermediate/ step based moves
 """
 
 import math
-import time
 import datetime
 from constants import *
 
@@ -54,10 +53,10 @@ class MotionPlanner:
         T_STEP_DELAY = 0.05  # seconds
         R_STEP_INC = 11
 
-        start_time = time.time()
+        start_time = datetime.now()
         timeout = datetime.timedelta(seconds=10)  # 10 seconds timeout for seeking reference
 
-        while time.time() - start_time < timeout:
+        while datetime.now() - start_time < timeout:
             # loop theta, full rotation    
             for i in range(T_FULL_ROTATION):
                 self._play_both_axis_step(direction.FORWARD, (True, False))
