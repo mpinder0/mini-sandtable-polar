@@ -31,6 +31,7 @@ Translate move pattern points into time-based intermediate/ step based moves
 """
 
 import math
+import time
 import datetime
 from constants import *
 
