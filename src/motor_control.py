@@ -48,5 +48,5 @@ class MotorControl:
         self._stepper_step(m, reverse)
     
     def is_reference_sensor_triggered(self):
-         # Sensor LOW when triggered. Low to return True.
+        # Sensor LOW when triggered. Low to return True.
         return GPIO.input(REFERENCE_SENSOR_PIN) == False
