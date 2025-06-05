@@ -9,6 +9,7 @@ stepper 2 - rho control
 from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
+import board
 
 REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
