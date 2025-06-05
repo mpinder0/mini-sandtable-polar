@@ -17,12 +17,20 @@
 
 from motor_control import MotorControl
 from motion_planner import MotionPlanner
-from pattern_spiral import PatternSpiral
+from pattern_circle import PatternCircle
 
 motors = MotorControl()
 planner = MotionPlanner(motors)
 
-spiral = PatternSpiral()
-pattern = spiral.get_pattern()
+print("Referenceing...")
+# Zero the motors
+planner.reference_routine()
 
+print("Loading a circle...")
+# load a pattern
+p = PatternCircle()
+pattern = p.get_pattern()
+
+print("Pattern loaded. Executing...")
+# Ececute the pattern
 planner.play(pattern)
