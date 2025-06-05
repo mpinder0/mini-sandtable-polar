@@ -32,6 +32,7 @@ Translate move pattern points into time-based intermediate/ step based moves
 
 import math
 import time
+import datetime
 from constants import *
 
 class MotionPlanner:
@@ -54,7 +55,7 @@ class MotionPlanner:
         R_STEP_INC = 11
 
         start_time = time.time()
-        timeout = time.delta(seconds=10)  # 10 seconds timeout for seeking reference
+        timeout = datetime.timedelta(seconds=10)  # 10 seconds timeout for seeking reference
 
         while time.time() - start_time < timeout:
             # loop theta, full rotation    
