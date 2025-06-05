@@ -51,6 +51,7 @@ class MotionPlanner:
 
     def _seek_reference_sensor(self):
         T_FULL_ROTATION = 2 * 3.141592653589793
+        T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T)  # number of steps for full rotation
         T_STEP_DELAY = 0.05  # seconds
         R_STEP_INC = 11
 
@@ -59,7 +60,7 @@ class MotionPlanner:
 
         while datetime.now() - start_time < timeout:
             # loop theta, full rotation    
-            for i in range(T_FULL_ROTATION):
+            for i in range(T_FULL_ROTATION_STEPS):
                 self._play_both_axis_step(direction.FORWARD, (True, False))
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
