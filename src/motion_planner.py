@@ -69,7 +69,7 @@ class MotionPlanner:
 
             # increment rho
             for i in range(R_STEP_INC):
-                self._play_both_axis_step(direction.FORWARD, (False, True))
+                self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
         return False # reference sensor not found within timeout
     
     def reference_routine(self):
