@@ -62,3 +62,6 @@ if __name__ == "__main__":
     print("Stepping rho 500 times...")
     for i in range(500):
         mc.step(axis.RHO)
+
+    mc.motors_release()
+    print("Motors released.")

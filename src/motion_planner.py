@@ -52,11 +52,11 @@ class MotionPlanner:
     def _seek_reference_sensor(self):
         T_FULL_ROTATION = 2 * 3.141592653589793
         T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T)  # number of steps for full rotation
-        T_STEP_DELAY = 0.05  # seconds
+        T_STEP_DELAY = 0.0  # no delay
         R_STEP_INC = 11
 
         start_time = datetime.now()
-        timeout = timedelta(seconds=10)  # 10 seconds timeout for seeking reference
+        timeout = timedelta(seconds=60)  # 10 seconds timeout for seeking reference
 
         while datetime.now() - start_time < timeout:
             # loop theta, full rotation    
@@ -165,9 +165,9 @@ class MotionPlanner:
             # axis coupled, so rho must also step.
             # rho -1 for each theta +1 and vice versa
             if dir[0] == direction.FORWARD:
-                rho_count -= 1
-            else:
                 rho_count += 1
+            else:
+                rho_count -= 1
         
         if step[1]:
             rho_count += 1 if dir[1] == direction.FORWARD else -1
