@@ -45,7 +45,7 @@ class MotorControl:
         self._stepper_step(m, reverse)
 
     def rho_step(self, reverse=False):
-        m = self.kit.stepper1
+        m = self.kit.stepper2
         self._stepper_step(m, reverse)
     
     def is_reference_sensor_triggered(self):
