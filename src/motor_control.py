@@ -12,12 +12,15 @@ import RPi.GPIO as GPIO
 import board
 from constants import *
 import time
+from datetime import datetime, timedelta
 
 REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
 class MotorControl:
     
     kit = None
+    theta_timestamp = 0
+    rho_timestamp = 0
     
     def __init__(self):
         self.kit = MotorKit(i2c=board.I2C())
@@ -42,20 +45,28 @@ class MotorControl:
             raise ValueError("Invalid axis. Use 'axis.THETA' or 'axis.RHO'.")
 
     def theta_step(self, reverse=False):
+        # Wait for the minimum step delay before stepping again
+        while (datetime.now() - self.theta_timestamp) < timedelta(seconds=MIN_STEP_DELAY):
+            time.sleep(0.001)
+        
         if AXIS_T_INVERT_DIR:
             reverse = reverse == False
+        
         m = self.kit.stepper1
         self._stepper_step(m, reverse)
-        time.sleep(0.005)
-        print("t - ", time.time())
+        self.theta_timestamp = datetime.now()
 
     def rho_step(self, reverse=False):
+        # Wait for the minimum step delay before stepping again
+        while (datetime.now() - self.rho_timestamp) < timedelta(seconds=MIN_STEP_DELAY):
+            time.sleep(0.001)
+        
         if AXIS_R_INVERT_DIR:
             reverse = reverse == False
+        
         m = self.kit.stepper2
         self._stepper_step(m, reverse)
-        time.sleep(0.005)
-        print("r - ", time.time())
+        self.rho_timestamp = datetime.now()
     
     def is_reference_sensor_triggered(self):
         # Sensor LOW when triggered. Low to return True.

@@ -156,6 +156,7 @@ class MotionPlanner:
         is_reverse = dir != direction.FORWARD
         for i in range(int(gear_ratio)):
             self.motors.step(axis, is_reverse)
+            time.sleep(MIN_STEP_DELAY)  # small delay to allow motor to step
 
     def _play_both_axis_step(self, dir, step):
         rho_count = 0
@@ -171,6 +172,8 @@ class MotionPlanner:
         
         if step[1]:
             rho_count += 1 if dir[1] == direction.FORWARD else -1
+
+        print(1 if step[0] else 0, rho_count)
 
         rho_direction = direction.FORWARD if rho_count >= 0 else direction.BACKWARD
         rho_count = abs(rho_count)
