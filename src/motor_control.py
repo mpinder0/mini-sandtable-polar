@@ -10,7 +10,8 @@ from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
 import board
-from constants import axis
+from constants import *
+import time
 
 REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
@@ -41,12 +42,20 @@ class MotorControl:
             raise ValueError("Invalid axis. Use 'axis.THETA' or 'axis.RHO'.")
 
     def theta_step(self, reverse=False):
+        if AXIS_T_INVERT_DIR:
+            reverse = reverse == False
         m = self.kit.stepper1
         self._stepper_step(m, reverse)
+        time.sleep(0.005)
+        print("t - ", time.time())
 
     def rho_step(self, reverse=False):
+        if AXIS_R_INVERT_DIR:
+            reverse = reverse == False
         m = self.kit.stepper2
         self._stepper_step(m, reverse)
+        time.sleep(0.005)
+        print("r - ", time.time())
     
     def is_reference_sensor_triggered(self):
         # Sensor LOW when triggered. Low to return True.
@@ -55,13 +64,21 @@ class MotorControl:
 if __name__ == "__main__":
     mc = MotorControl()    
 
-    print("Stepping theta 500 times...")
+    print("Stepping Theta 500 Forward times, 500 times Backward...")
     for i in range(500):
         mc.step(axis.THETA)
+        time.sleep(0.005)
+    for i in range(500):
+        mc.step(axis.THETA, reverse=True)
+        time.sleep(0.005)
     
-    print("Stepping rho 500 times...")
+    print("Stepping rho 500 Forward times, 500 times Backward...")
     for i in range(500):
         mc.step(axis.RHO)
+        time.sleep(0.005)
+    for i in range(500):
+        mc.step(axis.RHO, reverse=True)
+        time.sleep(0.005)
 
     mc.motors_release()
     print("Motors released.")

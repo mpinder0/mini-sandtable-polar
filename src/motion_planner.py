@@ -165,9 +165,9 @@ class MotionPlanner:
             # axis coupled, so rho must also step.
             # rho -1 for each theta +1 and vice versa
             if dir[0] == direction.FORWARD:
-                rho_count += 1
-            else:
                 rho_count -= 1
+            else:
+                rho_count += 1
         
         if step[1]:
             rho_count += 1 if dir[1] == direction.FORWARD else -1
