@@ -28,7 +28,7 @@ planner.reference_routine()
 
 print("Loading a circle...")
 # load a pattern
-p = PatternCircle()
+p = PatternCircle(10)
 pattern = p.get_pattern()
 
 print("Pattern loaded. Executing...")
