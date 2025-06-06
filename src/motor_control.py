@@ -10,6 +10,7 @@ from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
 import board
+from constants import axis
 
 REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
@@ -31,10 +32,10 @@ class MotorControl:
         direction = stepper.BACKWARD if reverse else stepper.FORWARD
         motor.onestep(direction=direction, style=stepper.SINGLE)
 
-    def step(self, axis, reverse=False):
-        if axis == axis.THETA:
+    def step(self, ax, reverse=False):
+        if ax == axis.THETA:
             self.theta_step(reverse)
-        elif axis == axis.RHO:
+        elif ax == axis.RHO:
             self.rho_step(reverse)
         else:
             raise ValueError("Invalid axis. Use 'axis.THETA' or 'axis.RHO'.")
@@ -50,3 +51,14 @@ class MotorControl:
     def is_reference_sensor_triggered(self):
         # Sensor LOW when triggered. Low to return True.
         return GPIO.input(REFERENCE_SENSOR_PIN) == False
+
+if __name__ == "__main__":
+    mc = MotorControl()    
+
+    print("Stepping theta 500 times...")
+    for i in range(500):
+        mc.step(axis.THETA)
+    
+    print("Stepping rho 500 times...")
+    for i in range(500):
+        mc.step(axis.RHO)
