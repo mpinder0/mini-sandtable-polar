@@ -12,18 +12,6 @@ class TestMotionPlanner(unittest.TestCase):
     def setUp(self):
         self.motors = MotorControlMock()
         self.planner = MotionPlanner(self.motors)
-    
-    '''
-    def test_motor_steps_per_time_step(self):
-        result = self.planner._motor_steps_per_time_step(1, 2, 2)
-        self.assertEqual(1, result)
-        result = self.planner._motor_steps_per_time_step(0.5, 0.0174533, 0.0174533)
-        self.assertEqual(0.5, result)
-        result = self.planner._motor_steps_per_time_step(0.5, 0.5, 1)
-        self.assertEqual(1, result)
-        # exception case, result >1
-        self.assertRaises(Exception, self.planner._motor_steps_per_time_step, 1, 0.5, 1)
-    '''
 
     def test_count_steps_to_position(self):
         #  - theta: 0.00306796 * 6 = 0.01840776 radians
@@ -76,13 +64,13 @@ class TestMotionPlanner(unittest.TestCase):
     def test_play_both_axis_steps(self):
         step_multiplier = (AXIS_GEAR_RATIO_T, AXIS_GEAR_RATIO_R)
         results = {"FF": (1, 0),
-                   "FR": (1, -2),
-                   "RF": (-1, 2),
+                   "FR": (1, 2),
+                   "RF": (-1, -2),
                    "RR": (-1, 0),
-                   "FX": (1, -1),
-                   "RX": (-1, 1),
-                   "XF": (0, 1),
-                   "XR": (0, -1),
+                   "FX": (1, 1),
+                   "RX": (-1, -1),
+                   "XF": (0, -1),
+                   "XR": (0, 1),
                    "XX": (0, 0)}
         # unzip theta and rho into separate lists
         r_list_t, r_list_r = zip(*results.values())

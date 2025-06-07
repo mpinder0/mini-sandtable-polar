@@ -19,8 +19,8 @@ AXIS_GEAR_RATIO_R = 1 # 1:1 gear ratio
 # note: theta and rho axis are coupled, so for each theta step rho must also step (theta:rho - 6:1)
 
 # step size - units
-AXIS_STEP_T = 0.00306796 * AXIS_GEAR_RATIO_T # radians
-AXIS_STEP_R = 0.08726646 * AXIS_GEAR_RATIO_R # mm
+AXIS_STEP_T = 0.00306796 # * AXIS_GEAR_RATIO_T # radians
+AXIS_STEP_R = 0.08726646 # * AXIS_GEAR_RATIO_R # mm
 
 # speed - untis per second
 AXIS_SPEED_T = 0.0174533

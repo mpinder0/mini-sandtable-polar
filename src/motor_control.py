@@ -19,8 +19,8 @@ REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 class MotorControl:
     
     kit = None
-    theta_timestamp = 0
-    rho_timestamp = 0
+    theta_timestamp = datetime.now()
+    rho_timestamp = datetime.now()
     
     def __init__(self):
         self.kit = MotorKit(i2c=board.I2C())
