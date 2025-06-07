@@ -20,11 +20,11 @@ AXIS_GEAR_RATIO_R = 1 # 1:1 gear ratio
 
 # step size - units
 AXIS_STEP_T = 0.00306796 # * AXIS_GEAR_RATIO_T # radians
-AXIS_STEP_R = 0.08726646 # * AXIS_GEAR_RATIO_R # mm
+AXIS_STEP_R = 0.00488281 # * AXIS_GEAR_RATIO_R # mm
 
 # speed - untis per second
-AXIS_SPEED_T = 0.0174533
-AXIS_SPEED_R = 1
+#AXIS_SPEED_T = 0.0174533
+#AXIS_SPEED_R = 2
 # speed - motor steps per time step
 #AXIS_STEP_RATE_T = AXIS_SPEED_T / AXIS_STEP_T * TIME_STEP_S
 #AXIS_STEP_RATE_R = AXIS_SPEED_R / AXIS_STEP_R * TIME_STEP_S
