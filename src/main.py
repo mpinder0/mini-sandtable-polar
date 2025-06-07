@@ -27,7 +27,7 @@ print("Referenceing...")
 planner.reference_routine()
 
 print("Move to the center...")
-move = planner.get_steps_for_move(planner.current_position, (0, 0))
+move = planner.get_steps_for_move((0, 0))
 planner.play_move(move)
 
 print("Loading a circle...")

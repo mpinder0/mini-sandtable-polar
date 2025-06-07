@@ -119,7 +119,7 @@ class MotionPlanner:
                 result.append(False)
         return result
 
-    def get_steps_for_move(self, position, position_next):
+    def get_steps_for_move(self, position_next):
         '''
         params
             position - tuple int (theta, rho) current position
@@ -129,7 +129,7 @@ class MotionPlanner:
             axis_steps_list - list of tuples (theta, rho) for each time step
         '''
         # get the number of steps between current and new position
-        step_counts = self._count_steps_to_position(position, position_next)
+        step_counts = self._count_steps_to_position(self.current_position, position_next)
         
         # get directions - negative is reverse
         directions = tuple((direction.FORWARD if x > 0 else direction.BACKWARD for x in step_counts))
@@ -203,7 +203,7 @@ class MotionPlanner:
     def play(self, pattern):
         # loop through position changes
         for position in pattern:
-            move = self.get_steps_for_move(self.current_position, position)
+            move = self.get_steps_for_move(position)
             # execute motor steps to complete the move
             self.play_move(move)
             self.current_position = position
@@ -216,6 +216,8 @@ if __name__ == "__main__":
     print("Axis step rate (steps/time step): {}, {}".format(AXIS_STEP_RATE_T, AXIS_STEP_RATE_R))
 
     p = MotionPlanner(None)
-    print(p._count_steps_to_position((0, 0),(2, 10)))
+    p.current_position = (0, 0)
+    print(p._count_steps_to_position((2, 10)))
 
-    print(p.get_steps_for_move((0, 0), (2, 10)))
+    p.current_position = (0, 0)
+    print(p.get_steps_for_move((2, 10)))
