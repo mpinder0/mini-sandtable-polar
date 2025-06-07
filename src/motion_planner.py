@@ -80,7 +80,6 @@ class MotionPlanner:
         if found_reference:
             # move rho to centre
             move = self.get_steps_for_move(self.current_position, (0, R_RETURN_TO_CENTRE))
-            print(move)
             self.play_move(move)
             # this position is 0,0
             self.current_position = (0, 0)
