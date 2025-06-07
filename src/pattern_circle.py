@@ -10,7 +10,7 @@ import constants as c
 T_FULL_ROTATION = 2 * 3.141592653589793  # Full rotation in radians - 2pi
 T_RAD_PER_STEP = T_FULL_ROTATION / 100
 
-R_POS = 5 # Fixed rho position for circle
+R_POS = 20 # Fixed rho position for circle
 
 class PatternCircle:
     

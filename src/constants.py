@@ -11,7 +11,7 @@ class direction(Enum):
 AXIS_MAX_R = 10.0 # mm, min always 0
 TIME_STEP_S = 0.05 # seconds, 50 ms time step for the motion planner
 
-MIN_STEP_DELAY = 0.005 # Minimum delay between steps in sections, to allow the motor to step properly
+MIN_STEP_DELAY = 0.002 # Minimum delay between steps in sections, to allow the motor to step properly
 
 # axis gearing
 AXIS_GEAR_RATIO_T = 6 # 6:1 gear ratio

@@ -74,12 +74,13 @@ class MotionPlanner:
     
     def reference_routine(self):
         # routine to seek reference position, apply offset to centre then set position to (0,0)
-        R_RETURN_TO_CENTRE = -5  # mm, distance to return rho to centre after detecting reference
+        R_RETURN_TO_CENTRE = -50  # mm, distance to return rho to centre after detecting reference
 
         found_reference = self._seek_reference_sensor()
         if found_reference:
             # move rho to centre
             move = self.get_steps_for_move(self.current_position, (0, R_RETURN_TO_CENTRE))
+            print(move)
             self.play_move(move)
             # this position is 0,0
             self.current_position = (0, 0)
@@ -91,9 +92,11 @@ class MotionPlanner:
         pos_change = (position_next[0]-position[0], position_next[1]-position[1])
         
         # calulcate number of motor steps to complete the move
-        steps_t = pos_change[0] / AXIS_STEP_T
-        steps_r = pos_change[1] / AXIS_STEP_R
+        steps_t = int(pos_change[0] / AXIS_STEP_T)
+        steps_r = int(pos_change[1] / AXIS_STEP_R)
         steps = (steps_t, steps_r)
+        
+        print("steps:", steps)
         
         return steps
     
@@ -130,7 +133,7 @@ class MotionPlanner:
         step_counts = self._count_steps_to_position(position, position_next)
         
         # get directions - negative is reverse
-        directions = tuple((direction.FORWARD if x > 0 else direction.FORWARD for x in step_counts))
+        directions = tuple((direction.FORWARD if x > 0 else direction.BACKWARD for x in step_counts))
         step_counts_abs = tuple(map(abs, step_counts))
 
         # calculate the number of time steps required to move the distance
@@ -173,7 +176,7 @@ class MotionPlanner:
         if step[1]:
             rho_count += 1 if dir[1] == direction.FORWARD else -1
 
-        print(1 if step[0] else 0, rho_count)
+        #print(1 if step[0] else 0, rho_count)
 
         rho_direction = direction.FORWARD if rho_count >= 0 else direction.BACKWARD
         rho_count = abs(rho_count)
