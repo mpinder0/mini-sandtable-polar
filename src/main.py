@@ -26,6 +26,10 @@ print("Referenceing...")
 # Zero the motors
 planner.reference_routine()
 
+print("Move to the center...")
+move = planner.get_steps_for_move(planner.current_position, (0, 0))
+planner.play_move(move)
+
 print("Loading a circle...")
 # load a pattern
 p = PatternCircle(10)

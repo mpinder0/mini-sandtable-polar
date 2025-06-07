@@ -74,15 +74,15 @@ class MotionPlanner:
     
     def reference_routine(self):
         # routine to seek reference position, apply offset to centre then set position to (0,0)
-        R_RETURN_TO_CENTRE = -50  # mm, distance to return rho to centre after detecting reference
+        R_DIST_TO_CENTRE = 50  # mm, distance to return rho to centre after detecting reference
 
         found_reference = self._seek_reference_sensor()
         if found_reference:
             # move rho to centre
-            move = self.get_steps_for_move(self.current_position, (0, R_RETURN_TO_CENTRE))
-            self.play_move(move)
+            #move = self.get_steps_for_move(self.current_position, (0, R_DIST_TO_CENTRE * -1))
+            #self.play_move(move)
             # this position is 0,0
-            self.current_position = (0, 0)
+            self.current_position = (0, R_DIST_TO_CENTRE)
         else:
             raise Exception("Reference sensor not found. Check motor connections and sensor functionality.")
 
