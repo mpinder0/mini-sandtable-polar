@@ -213,7 +213,7 @@ if __name__ == "__main__":
     print("## CONSTANTS")
     print("Time step:", TIME_STEP_S, "seconds")
     print("Axis step size: {}, {}".format(AXIS_STEP_T, AXIS_STEP_R))
-    print("Axis speed (unit/s): {}, {}".format(AXIS_SPEED_T, AXIS_SPEED_R))
+    #print("Axis speed (unit/s): {}, {}".format(AXIS_SPEED_T, AXIS_SPEED_R))
     print("Axis step rate (steps/time step): {}, {}".format(AXIS_STEP_RATE_T, AXIS_STEP_RATE_R))
 
     p = MotionPlanner(None)

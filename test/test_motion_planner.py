@@ -14,17 +14,12 @@ class TestMotionPlanner(unittest.TestCase):
         self.planner = MotionPlanner(self.motors)
 
     def test_count_steps_to_position(self):
-        #  - theta: 0.00306796 * 6 = 0.01840776 radians
-        #  - rho: 0.08726646 * 1 = 0.08726646 mm
-        rad_step = 0.01840776
-        mm_step = 0.08726646
-        
         # Test with a simple move
         position_start = (0, 0)
         position_next = (5, 5)
         steps = self.planner._count_steps_to_position(position_start, position_next)
-        t = 5 / rad_step # steps in 5 rad
-        r = 5 / mm_step # steos in 5 mm
+        t = int(5 / AXIS_STEP_T) # steps in 5 rad
+        r = int(5 / AXIS_STEP_R) # steos in 5 mm
         self.assertEqual(steps, (t, r))
         
         # Test with a move that requires no steps
@@ -35,8 +30,8 @@ class TestMotionPlanner(unittest.TestCase):
         # Test with a negative move
         position_next = (-1, -1)
         steps = self.planner._count_steps_to_position(position_start, position_next)
-        t = -1 / rad_step
-        r = -1 / mm_step
+        t = int(-1 / AXIS_STEP_T)
+        r = int(-1 / AXIS_STEP_R)
         self.assertEqual(steps, (t, r))
 
     def test_play_one_axis_step(self):
@@ -63,14 +58,14 @@ class TestMotionPlanner(unittest.TestCase):
 
     def test_play_both_axis_steps(self):
         step_multiplier = (AXIS_GEAR_RATIO_T, AXIS_GEAR_RATIO_R)
-        results = {"FF": (1, 0),
-                   "FR": (1, 2),
-                   "RF": (-1, -2),
-                   "RR": (-1, 0),
+        results = {"FF": (1, 2),
+                   "FR": (1, 0),
+                   "RF": (-1, 0),
+                   "RR": (-1, -2),
                    "FX": (1, 1),
                    "RX": (-1, -1),
-                   "XF": (0, -1),
-                   "XR": (0, 1),
+                   "XF": (0, 1),
+                   "XR": (0, -1),
                    "XX": (0, 0)}
         # unzip theta and rho into separate lists
         r_list_t, r_list_r = zip(*results.values())
@@ -138,8 +133,8 @@ class TestMotionPlanner(unittest.TestCase):
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
-        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps * -1)
-        results = (12,0)
+        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
+        results = (12,4)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -151,8 +146,8 @@ class TestMotionPlanner(unittest.TestCase):
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
-        # Rho axis steps -2 * AXIS_GEAR_RATIO_R + (Theta steps * -1)
-        results = (12,-4)
+        # Rho axis steps -2 * AXIS_GEAR_RATIO_R + (Theta steps)
+        results = (12,0)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -164,8 +159,21 @@ class TestMotionPlanner(unittest.TestCase):
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
         # Theta axis -2 * AXIS_GEAR_RATIO_T
-        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps * -1)
-        results = (-12,4)
+        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
+        results = (-12,0)
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner.play_move(instructions)
+        self.assertEqual(self.motors.theta_count, results[0])
+        self.assertEqual(self.motors.rho_count, results[1])
+
+        instructions = {
+            'directions': (direction.BACKWARD, direction.BACKWARD),
+            'axis_steps_list': [(True, True), (False, False), (True, True)]
+        }
+        # Theta axis -2 * AXIS_GEAR_RATIO_T
+        # Rho axis steps -2 * AXIS_GEAR_RATIO_R + (Theta steps)
+        results = (-12,-4)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -178,8 +186,8 @@ class TestMotionPlanner(unittest.TestCase):
             'axis_steps_list': [(True, False), (False, False), (True, False)]
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
-        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps * -1)
-        results = (12,-2)
+        # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
+        results = (12,2)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
