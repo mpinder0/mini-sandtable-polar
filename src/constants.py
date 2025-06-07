@@ -9,7 +9,7 @@ class direction(Enum):
     BACKWARD = 2
 
 AXIS_MAX_R = 10.0 # mm, min always 0
-TIME_STEP_S = 0.05 # seconds, 50 ms time step for the motion planner
+TIME_STEP_S = 0.015 # seconds, 15 ms time step for the motion planner
 
 MIN_STEP_DELAY = 0.002 # Minimum delay between steps in sections, to allow the motor to step properly
 
