@@ -53,10 +53,10 @@ class MotionPlanner:
         T_FULL_ROTATION = 2 * 3.141592653589793
         T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T) # number of steps for full rotation
         T_STEP_DELAY = 0.0  # no delay
-        R_STEP_INC = 200
+        R_STEP_INC = 130 # ~2mm
 
         start_time = datetime.now()
-        timeout = timedelta(minutes=20)  # 20 minutes timeout for seeking reference
+        timeout = timedelta(minutes=30)  # 30 minutes timeout for seeking reference (it moves slowly)
 
         while datetime.now() - start_time < timeout:
             # loop theta, full rotation    
@@ -74,7 +74,7 @@ class MotionPlanner:
     
     def reference_routine(self):
         # routine to seek reference position, apply offset to centre then set position to (0,0)
-        R_DIST_TO_CENTRE = 50  # mm, distance to return rho to centre after detecting reference
+        R_DIST_TO_CENTRE = 40  # mm, distance to return rho to centre after detecting reference
 
         found_reference = self._seek_reference_sensor()
         if found_reference:
@@ -95,6 +95,7 @@ class MotionPlanner:
         steps_r = int(pos_change[1] / AXIS_STEP_R)
         steps = (steps_t, steps_r)
         
+        print("start, end:", self.current_position, position_next)
         print("steps:", steps)
         
         return steps
