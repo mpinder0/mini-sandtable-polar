@@ -129,6 +129,8 @@ class TestMotionPlanner(unittest.TestCase):
 
     def test_play_move(self):
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (AXIS_STEP_T * 2, AXIS_STEP_T * 2),
             'directions': (direction.FORWARD, direction.FORWARD),
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
@@ -142,6 +144,8 @@ class TestMotionPlanner(unittest.TestCase):
         self.assertEqual(self.motors.rho_count, results[1])
 
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (AXIS_STEP_T * 2, AXIS_STEP_T * -2),
             'directions': (direction.FORWARD, direction.BACKWARD),
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
@@ -155,6 +159,8 @@ class TestMotionPlanner(unittest.TestCase):
         self.assertEqual(self.motors.rho_count, results[1])
 
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (AXIS_STEP_T * -2, AXIS_STEP_T * 2),
             'directions': (direction.BACKWARD, direction.FORWARD),
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
@@ -168,6 +174,8 @@ class TestMotionPlanner(unittest.TestCase):
         self.assertEqual(self.motors.rho_count, results[1])
 
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (AXIS_STEP_T * -2, AXIS_STEP_T * -2),
             'directions': (direction.BACKWARD, direction.BACKWARD),
             'axis_steps_list': [(True, True), (False, False), (True, True)]
         }
@@ -182,6 +190,8 @@ class TestMotionPlanner(unittest.TestCase):
 
         # Just theta
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (AXIS_STEP_T * 2, 0),
             'directions': (direction.FORWARD, direction.FORWARD),
             'axis_steps_list': [(True, False), (False, False), (True, False)]
         }
@@ -196,6 +206,8 @@ class TestMotionPlanner(unittest.TestCase):
 
         # Just rho
         instructions = {
+            'start_position': (0, 0),
+            'end_position': (0, AXIS_STEP_T * 2),
             'directions': (direction.FORWARD, direction.FORWARD),
             'axis_steps_list': [(False, True), (False, False), (False, True)]
         }
