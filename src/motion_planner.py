@@ -66,11 +66,13 @@ class MotionPlanner:
             time.sleep(MIN_STEP_DELAY)
         raise Exception("Error during reference routine. could not find reference={} before exceeding step limit, moving axis {}".format(desired_state, ax))
 
-    def _seek_reference_sensor(self):
+    def reference_routine(self):
         T_FULL_ROTATION = 2 * 3.141592653589793
         T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T) # number of steps for full rotation
         R_STEP_INC = 130 # ~2mm
         STEPS_IN_STATE = 5 # number of steps in desired state to consider it found
+        R_STEPS_TO_LIMIT = 260
+        R_DIST_TO_CENTRE = 45  # mm, distance to return rho to centre after detecting reference
 
         start_time = datetime.now()
         timeout = timedelta(minutes=30)  # 30 minutes timeout for seeking reference (it moves slowly)
@@ -85,7 +87,7 @@ class MotionPlanner:
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
                     in_state_count += 1
-                # steps in desired state met, return
+                # steps in desired state met
                 if in_state_count >= STEPS_IN_STATE:
                     found_reference = True
                 time.sleep(MIN_STEP_DELAY)
@@ -111,23 +113,14 @@ class MotionPlanner:
             # find the sensor trailing edge in rho
             self._do_simple_reference_move(axis.RHO, direction.BACKWARD, False, STEPS_IN_STATE, 500)
 
-            # todo: more rho farward again to axis limit
-        else:
-            raise Exception("Reference sensor not found before timeout")
-    
-    def reference_routine(self):
-        # routine to seek reference position, apply offset to centre then set position to (0,0)
-        R_DIST_TO_CENTRE = 40  # mm, distance to return rho to centre after detecting reference
-
-        found_reference = self._seek_reference_sensor()
-        if found_reference:
-            # move rho to centre
-            #move = self.get_steps_for_move(self.current_position, (0, R_DIST_TO_CENTRE * -1))
-            #self.play_move(move)
-            # this position is 0,0
+            # move rho to the limit
+            for i in range(R_STEPS_TO_LIMIT):
+                self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
+                time.sleep(MIN_STEP_DELAY)
+            
             self.current_position = (0, R_DIST_TO_CENTRE)
         else:
-            raise Exception("Reference sensor not found. Check motor connections and sensor functionality.")
+            raise Exception("Reference sensor not found before timeout")
 
     def _count_steps_to_position(self, position, position_next):
         # subtract current position from target position
