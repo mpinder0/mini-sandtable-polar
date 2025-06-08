@@ -87,20 +87,25 @@ class MotionPlanner:
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
                     in_state_count += 1
+                    print(".", end='', flush=True)
                 # steps in desired state met
                 if in_state_count >= STEPS_IN_STATE:
                     found_reference = True
                 time.sleep(MIN_STEP_DELAY)
 
             # increment rho
+            print("rho step out")
             for i in range(R_STEP_INC):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
                 time.sleep(MIN_STEP_DELAY)
 
         if found_reference:        
+            print("Ref found... refining position")
             # find the sensor trailing edge in theta
             ref_step_count = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
+            print("Theta step count:", ref_step_count)
 
+            print("Moving to theta mid point")
             # move to the middle of the leading and trailing edges
             count_mid = int(ref_step_count / 2)
             for i in range(count_mid):
@@ -110,15 +115,18 @@ class MotionPlanner:
             if not self.motors.is_reference_sensor_triggered():
                 raise Exception("Ref sensor not found after moving to Theta mid point.")
 
+            print("Finding rho trailing edge")
             # find the sensor trailing edge in rho
             self._do_simple_reference_move(axis.RHO, direction.BACKWARD, False, STEPS_IN_STATE, 500)
 
             # move rho to the limit
+            print("Moving rho to limit")
             for i in range(R_STEPS_TO_LIMIT):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
                 time.sleep(MIN_STEP_DELAY)
             
             self.current_position = (0, R_DIST_TO_CENTRE)
+            print("Referencing complete.")
         else:
             raise Exception("Reference sensor not found before timeout")
 
