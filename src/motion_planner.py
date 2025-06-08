@@ -69,9 +69,9 @@ class MotionPlanner:
     def reference_routine(self):
         T_FULL_ROTATION = 2 * 3.141592653589793
         T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T) # number of steps for full rotation
-        R_STEP_INC = 130 # ~2mm
+        R_STEP_INC = 65 * 2 # ~2mm
         STEPS_IN_STATE = 5 # number of steps in desired state to consider it found
-        R_STEPS_TO_LIMIT = 260
+        R_STEPS_TO_LIMIT = 65 * 4
         R_DIST_TO_CENTRE = 45  # mm, distance to return rho to centre after detecting reference
 
         start_time = datetime.now()
