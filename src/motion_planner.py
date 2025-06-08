@@ -49,28 +49,71 @@ class MotionPlanner:
         if AXIS_STEP_RATE_R > 1:
             raise Exception(ex_string.format('Rho', AXIS_STEP_RATE_R))
 
+    def _do_simple_reference_move(self, ax, dir, desired_state, steps_in_state, step_limit):
+        step_count = 0
+        in_state_count = 0
+        directions = (direction.FORWARD, direction.FORWARD) if dir == direction.FORWARD else (direction.BACKWARD, direction.BACKWARD)
+        step_instructions = (ax == axis.THETA, ax == axis.RHO)
+        while step_count < step_limit:
+            self._play_both_axis_step(directions, step_instructions)
+            step_count += 1
+            # check for reference sensor
+            if self.motors.is_reference_sensor_triggered() == desired_state:
+                in_state_count += 1
+            # steps in desired state met, return
+            if in_state_count >= steps_in_state:
+                return step_count
+            time.sleep(MIN_STEP_DELAY)
+        raise Exception("Error during reference routine. could not find reference={} before exceeding step limit, moving axis {}".format(desired_state, ax))
+
     def _seek_reference_sensor(self):
         T_FULL_ROTATION = 2 * 3.141592653589793
         T_FULL_ROTATION_STEPS = int(T_FULL_ROTATION / AXIS_STEP_T) # number of steps for full rotation
-        T_STEP_DELAY = 0.0  # no delay
         R_STEP_INC = 130 # ~2mm
+        STEPS_IN_STATE = 5 # number of steps in desired state to consider it found
 
         start_time = datetime.now()
         timeout = timedelta(minutes=30)  # 30 minutes timeout for seeking reference (it moves slowly)
+        in_state_count = 0
+        found_reference = False
 
-        while datetime.now() - start_time < timeout:
+        # find the sensor leading edge - spiralling outwards
+        while datetime.now() - start_time < timeout and not found_reference:
             # loop theta, full rotation    
             for i in range(T_FULL_ROTATION_STEPS):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
-                    return True # reference sensor found - success
-                time.sleep(T_STEP_DELAY)
+                    in_state_count += 1
+                # steps in desired state met, return
+                if in_state_count >= STEPS_IN_STATE:
+                    found_reference = True
+                time.sleep(MIN_STEP_DELAY)
 
             # increment rho
             for i in range(R_STEP_INC):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
-        return False # reference sensor not found within timeout
+                time.sleep(MIN_STEP_DELAY)
+
+        if found_reference:        
+            # find the sensor trailing edge in theta
+            ref_step_count = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
+
+            # move to the middle of the leading and trailing edges
+            count_mid = int(ref_step_count / 2)
+            for i in range(count_mid):
+                self._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, False))
+                time.sleep(MIN_STEP_DELAY)
+
+            if not self.motors.is_reference_sensor_triggered():
+                raise Exception("Ref sensor not found after moving to Theta mid point.")
+
+            # find the sensor trailing edge in rho
+            self._do_simple_reference_move(axis.RHO, direction.BACKWARD, False, STEPS_IN_STATE, 500)
+
+            # todo: more rho farward again to axis limit
+        else:
+            raise Exception("Reference sensor not found before timeout")
     
     def reference_routine(self):
         # routine to seek reference position, apply offset to centre then set position to (0,0)
