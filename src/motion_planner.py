@@ -52,7 +52,7 @@ class MotionPlanner:
     def _do_simple_reference_move(self, ax, dir, desired_state, steps_in_state, step_limit):
         step_count = 0
         in_state_count = 0
-        directions = (direction.FORWARD, direction.FORWARD) if dir == direction.FORWARD else (direction.BACKWARD, direction.BACKWARD)
+        directions = (dir, dir)
         step_instructions = (ax == axis.THETA, ax == axis.RHO)
         while step_count < step_limit:
             self._play_both_axis_step(directions, step_instructions)
@@ -60,8 +60,10 @@ class MotionPlanner:
             # check for reference sensor
             if self.motors.is_reference_sensor_triggered() == desired_state:
                 in_state_count += 1
+                print(".", end='', flush=True)
             # steps in desired state met, return
             if in_state_count >= steps_in_state:
+                print("Found ref:{} - {}{}".format(desired_state, ax, dir))
                 return step_count
             time.sleep(MIN_STEP_DELAY)
         raise Exception("Error during reference routine. could not find reference={} before exceeding step limit, moving axis {}".format(desired_state, ax))
@@ -90,19 +92,22 @@ class MotionPlanner:
                     print(".", end='', flush=True)
                 # steps in desired state met
                 if in_state_count >= STEPS_IN_STATE:
+                    print("Found theta+")
                     found_reference = True
+                    break
                 time.sleep(MIN_STEP_DELAY)
 
-            # increment rho
-            print("rho step out")
-            for i in range(R_STEP_INC):
-                self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
-                time.sleep(MIN_STEP_DELAY)
+            if not found_reference:
+                # increment rho
+                print("rho step out")
+                for i in range(R_STEP_INC):
+                    self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
+                    time.sleep(MIN_STEP_DELAY)
 
         if found_reference:        
             print("Ref found... refining position")
             # find the sensor trailing edge in theta
-            ref_step_count = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
+            ref_step_count = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
             print("Theta step count:", ref_step_count)
 
             print("Moving to theta mid point")
