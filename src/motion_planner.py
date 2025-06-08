@@ -150,6 +150,8 @@ class MotionPlanner:
 
         # create the result dictionary
         result_dict = {
+            'start_position': self.current_position,
+            'end_position': position_next,
             'directions': directions,
             'axis_steps_list': steps_list
         }
@@ -188,6 +190,8 @@ class MotionPlanner:
         '''
         params
         move - dict:
+            start_position - tuple (theta, rho) current position
+            end_position - tuple (theta, rho) next position
             axis_steps_list - list of tuples (theta, rho) contraining step True/False for each time step
             directions - tuple F/R for each axis
         '''
@@ -200,6 +204,8 @@ class MotionPlanner:
             self._play_both_axis_step(directions, step)
             # wait for time step
             time.sleep(TIME_STEP_S)
+        
+        self.current_position = move["end_position"]
     
     def play(self, pattern):
         # loop through position changes
@@ -207,7 +213,6 @@ class MotionPlanner:
             move = self.get_steps_for_move(position)
             # execute motor steps to complete the move
             self.play_move(move)
-            self.current_position = position
 
 if __name__ == "__main__":
     print("## CONSTANTS")
