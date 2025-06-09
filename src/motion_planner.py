@@ -74,10 +74,10 @@ class MotionPlanner:
         R_STEP_INC = 65 * 2 # ~2mm
         STEPS_IN_STATE = 5 # number of steps in desired state to consider it found
         R_STEPS_TO_LIMIT = 65 * 4
-        R_DIST_TO_CENTRE = 56  # mm, distance to return rho to centre after detecting reference
+        R_DIST_TO_CENTRE = 54  # mm, distance to return rho to centre after detecting reference
 
         start_time = datetime.now()
-        timeout = timedelta(minutes=30)  # 30 minutes timeout for seeking reference (it moves slowly)
+        timeout = timedelta(minutes=45)  # timeout for seeking reference (it moves slowly)
         in_state_count = 0
         found_reference = False
 
