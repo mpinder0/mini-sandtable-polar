@@ -120,7 +120,7 @@ class MotionPlanner:
             count_mid = int(ref_step_count_bw / 2)
             print("Moving to theta mid point. Steps to middle:", count_mid)
             for i in range(count_mid):
-                self._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, False))
+                self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
                 time.sleep(MIN_STEP_DELAY)
 
             if not self.motors.is_reference_sensor_triggered():
