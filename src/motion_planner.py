@@ -74,7 +74,7 @@ class MotionPlanner:
         R_STEP_INC = 65 * 2 # ~2mm
         STEPS_IN_STATE = 5 # number of steps in desired state to consider it found
         R_STEPS_TO_LIMIT = 65 * 4
-        R_DIST_TO_CENTRE = 45  # mm, distance to return rho to centre after detecting reference
+        R_DIST_TO_CENTRE = 50  # mm, distance to return rho to centre after detecting reference
 
         start_time = datetime.now()
         timeout = timedelta(minutes=30)  # 30 minutes timeout for seeking reference (it moves slowly)
@@ -112,7 +112,8 @@ class MotionPlanner:
 
             print("Moving to theta mid point")
             # move to the middle of the leading and trailing edges
-            count_mid = int(ref_step_count / 2)
+            count_mid = int(ref_step_count / 2) + STEPS_IN_STATE # +5 to account for the sensor debounce
+            print("steps to middle:", count_mid)
             for i in range(count_mid):
                 self._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, False))
                 time.sleep(MIN_STEP_DELAY)
@@ -144,7 +145,7 @@ class MotionPlanner:
         steps_r = int(pos_change[1] / AXIS_STEP_R)
         steps = (steps_t, steps_r)
         
-        print("start, end:", self.current_position, position_next)
+        print("pos start, end: {} -> {}".format(self.current_position, position_next))
         print("steps:", steps)
         
         return steps
