@@ -110,7 +110,7 @@ class MotionPlanner:
             ref_step_count_fw = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
             print("Theta step count forward:", ref_step_count_fw)
 
-            ref_step_count_bw_1 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, True, STEPS_IN_STATE, 20)
+            ref_step_count_bw_1 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, True, STEPS_IN_STATE, 50)
             # find the sensor trailing edge in theta-
             ref_step_count_bw_2 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
             ref_step_count_bw = ref_step_count_bw_1 + ref_step_count_bw_2
