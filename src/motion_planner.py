@@ -106,14 +106,19 @@ class MotionPlanner:
 
         if found_reference:        
             print("Ref found... refining position")
-            # find the sensor trailing edge in theta
-            ref_step_count = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
-            print("Theta step count:", ref_step_count)
+            # find the sensor trailing edge in theta+
+            ref_step_count_fw = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
+            print("Theta step count forward:", ref_step_count_fw)
 
-            print("Moving to theta mid point")
+            ref_step_count_bw_1 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, True, STEPS_IN_STATE, 20)
+            # find the sensor trailing edge in theta-
+            ref_step_count_bw_2 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
+            ref_step_count_bw = ref_step_count_bw_1 + ref_step_count_bw_2
+            print("Theta step count reverse: {} = {}+{}".format(ref_step_count_bw, ref_step_count_bw_1, ref_step_count_bw_2))
+
             # move to the middle of the leading and trailing edges
-            count_mid = int(ref_step_count / 2) + STEPS_IN_STATE # +5 to account for the sensor debounce
-            print("steps to middle:", count_mid)
+            count_mid = int(ref_step_count_bw / 2)
+            print("Moving to theta mid point. Steps to middle:", count_mid)
             for i in range(count_mid):
                 self._play_both_axis_step((direction.BACKWARD, direction.BACKWARD), (True, False))
                 time.sleep(MIN_STEP_DELAY)
