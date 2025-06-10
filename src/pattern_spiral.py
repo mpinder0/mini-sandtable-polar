@@ -9,32 +9,47 @@ Rho increment rate, mm per full rotation
 Theta step size - probaby multiples of axis step size.
 """
 
+from constants import *
+import position_helper
+
 T_DEG_PER_STEP = 1
 
-R_AXIS_MAX = 10
-R_INCREMENT_RATE_COMPLETE = 1 # mm per rotation
+R_INCREMENT_RATE_COMPLETE = 4 # mm per rotation
 
 R_INCREMENT_RATE_STEP = R_INCREMENT_RATE_COMPLETE / (360 * T_DEG_PER_STEP)
+
+INNER_POS = (0,0)
+OUTER_POS = (0, AXIS_MAX_R)
 
 class PatternSpiral:
     
     pattern = []
     
-    def __init__(self):
-        self._generate()
+    def __init__(self, r_reverse=False):
+        self._generate(r_reverse)
     
-    def _generate(self):
-        t_pos = 0
-        r_pos = 0
-        if R_INCREMENT_RATE_STEP > 0:
-            while r_pos < R_AXIS_MAX:
-                t_pos += T_DEG_PER_STEP
-                r_pos += R_INCREMENT_RATE_STEP
-                self.pattern.append((t_pos, r_pos))
+    def _generate(self, r_reverse):
+        if not r_reverse:
+            pos_t = INNER_POS[0]
+            pos_r = INNER_POS[1]
+            # spiral from inner to outer
+            while pos_r < OUTER_POS[1]:
+                pos_t += T_DEG_PER_STEP
+                pos_r += R_INCREMENT_RATE_STEP
+                pos = position_helper.limit_axis((pos_t, pos_r))
+                self.pattern.append(pos)
+        else:
+            # spiral from outer to inner
+            pos_t = OUTER_POS[0]
+            pos_r = OUTER_POS[1]
+            while pos_r > INNER_POS[1]:
+                pos_t += T_DEG_PER_STEP
+                pos_r -= R_INCREMENT_RATE_STEP # move inward
+                pos = position_helper.limit_axis((pos_t, pos_r))
+                self.pattern.append(pos)
 
     def get_pattern(self):
         return self.pattern
-
 
 if __name__ == "__main__":
     p = PatternSpiral()
