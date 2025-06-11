@@ -153,23 +153,24 @@ class MotionPlanner:
         return steps
     
     def _get_axis_steps_list(self, max_time_steps, steps):
-        # determine physical steps to time steps ratio
-        ratio = steps / max_time_steps
-
         result = []
         cumulative_ratio = 0.0
 
-        # for max time stpes to move, set active steps in list
-        for i in range(int(max_time_steps)):
-            # Increment cumulative ratio
-            cumulative_ratio += ratio
+        if max_time_steps > 0:
+            # determine physical steps to time steps ratio
+            ratio = steps / max_time_steps
 
-            # Append True if cumulative ratio exceeds the current index + 1
-            if cumulative_ratio >= 1:
-                result.append(True)
-                cumulative_ratio -= 1  # Reset cumulative ratio for the next step
-            else:
-                result.append(False)
+            # for max time stpes to move, set active steps in list
+            for i in range(int(max_time_steps)):
+                # Increment cumulative ratio
+                cumulative_ratio += ratio
+
+                # Append True if cumulative ratio exceeds the current index + 1
+                if cumulative_ratio >= 1:
+                    result.append(True)
+                    cumulative_ratio -= 1  # Reset cumulative ratio for the next step
+                else:
+                    result.append(False)
         return result
 
     def get_steps_for_move(self, position_next):

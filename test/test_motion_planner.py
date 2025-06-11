@@ -218,5 +218,19 @@ class TestMotionPlanner(unittest.TestCase):
         self.assertEqual(self.motors.theta_count, results[0])
         self.assertEqual(self.motors.rho_count, results[1])
 
+        # No move
+        instructions = {
+            'start_position': (0, 0),
+            'end_position': (0, 0),
+            'directions': (direction.FORWARD, direction.FORWARD),
+            'axis_steps_list': []
+        }
+        results = (0,0)
+        self.motors.theta_count = 0
+        self.motors.rho_count = 0
+        self.planner.play_move(instructions)
+        self.assertEqual(self.motors.theta_count, results[0])
+        self.assertEqual(self.motors.rho_count, results[1])
+
 if __name__ == '__main__':
     unittest.main()
