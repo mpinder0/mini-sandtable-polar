@@ -29,7 +29,7 @@ class PatternRadialSweep:
             
             # inscrement theta
             pos_t += T_STEP_SIZE
-            self.pattern.append(pos)
+            self.pattern.append((pos_t, pos_r))
 
             while pos_r > 0:
                 pos_r -= R_STEP_SIZE
@@ -38,7 +38,7 @@ class PatternRadialSweep:
 
             # inscrement theta
             pos_t += T_STEP_SIZE
-            self.pattern.append(pos)
+            self.pattern.append((pos_t, pos_r))
 
     def get_pattern(self):
         return self.pattern
