@@ -16,3 +16,15 @@ def limit_axis(position):
 
 def position_at_target(one_position, target, tolerance=0.1):
     return (one_position >= target - tolerance and one_position <= target + tolerance)
+
+def deg_to_rad(deg):
+    """
+    Convert degrees to radians.
+    """
+    return deg * (3.141592653589793 / 180.0)
+
+def rad_to_deg(rad):
+    """
+    Convert radians to degrees.
+    """
+    return rad * (180.0 / 3.141592653589793)
