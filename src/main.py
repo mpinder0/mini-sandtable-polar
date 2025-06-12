@@ -34,13 +34,13 @@ planner.play_move(move)
 
 print("Loading patterns...")
 # load a pattern
-p1 = PatternRadialSweep(1)
-p2 = PatternSpiral()
-pattern1 = p1.get_pattern()
-pattern2 = p2.get_pattern()
+radial = PatternRadialSweep(1)
+spiral = PatternSpiral()
+pattern_radial = radial.get_pattern()
+pattern_spiral = spiral.get_pattern()
 
 print("Pattern loaded. Executing...")
 # Ececute the pattern
 while True:
-    planner.play(pattern1)
-    planner.play(pattern2)
+    planner.play(pattern_radial)
+    planner.play(pattern_spiral)
