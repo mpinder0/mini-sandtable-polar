@@ -18,6 +18,7 @@
 from motor_control import MotorControl
 from motion_planner import MotionPlanner
 #from pattern_circle import PatternCircle
+from pattern_spiral import PatternSpiral
 from pattern_radial_sweep import PatternRadialSweep
 
 motors = MotorControl()
@@ -31,16 +32,15 @@ print("Move to the center...")
 move = planner.get_steps_for_move((0, 0))
 planner.play_move(move)
 
-'''
-print("Loading a circle...")
+print("Loading patterns...")
 # load a pattern
-p = PatternCircle(5)
-'''
-print("Loading radial sweep...")
-# load a pattern
-p = PatternRadialSweep(2)
-pattern = p.get_pattern()
+p1 = PatternRadialSweep(1)
+p2 = PatternSpiral()
+pattern1 = p1.get_pattern()
+pattern2 = p2.get_pattern()
 
 print("Pattern loaded. Executing...")
 # Ececute the pattern
-planner.play(pattern)
+while True:
+    planner.play(pattern1)
+    planner.play(pattern2)
