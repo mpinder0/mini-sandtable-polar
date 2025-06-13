@@ -10,9 +10,12 @@
 sleep 30
 ping github.com -c 5
 
-# start the platter script in venv
+# start the plotter script in venv
 cd /home/<user>/Repos/mini-sandtable-polar
+# make sure the git repo is up to date
 sudo -u <user> git pull
+# activate the virtual environment
 . .venv/bin/activate
 cd src
+# run the script
 python main.py
