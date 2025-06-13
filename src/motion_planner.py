@@ -64,7 +64,7 @@ class MotionPlanner:
                 in_state_count += 1
             # steps in desired state met, return
             if in_state_count >= steps_in_state:
-                self.logger.debug("Found ref:{} - {}{}".format(desired_state, ax, dir))
+                self.logger.debug("Found ref:{} - {} {}".format(desired_state, ax, dir))
                 return step_count
             time.sleep(MIN_STEP_DELAY)
         raise Exception("Error during reference routine. could not find reference={} before exceeding step limit, moving axis {}".format(desired_state, ax))
