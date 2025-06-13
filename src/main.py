@@ -23,7 +23,7 @@ from pattern_radial_sweep import PatternRadialSweep
 import logging
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', filename='plotter.log')
 
 motors = MotorControl()
 planner = MotionPlanner(motors)

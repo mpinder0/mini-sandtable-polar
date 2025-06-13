@@ -62,7 +62,6 @@ class MotionPlanner:
             # check for reference sensor
             if self.motors.is_reference_sensor_triggered() == desired_state:
                 in_state_count += 1
-                self.logger.debug(".", end='', flush=True)
             # steps in desired state met, return
             if in_state_count >= steps_in_state:
                 self.logger.debug("Found ref:{} - {}{}".format(desired_state, ax, dir))
@@ -88,7 +87,6 @@ class MotionPlanner:
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
                     in_state_count += 1
-                    self.logger.debug(".", end='', flush=True)
                 # steps in desired state met
                 if in_state_count >= STEPS_IN_STATE:
                     self.logger.debug("Found theta+")
@@ -107,7 +105,7 @@ class MotionPlanner:
             self.logger.debug("Ref found... refining position")
             # find the sensor trailing edge in theta+
             ref_step_count_fw = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
-            self.logger.debug("Theta step count forward:", ref_step_count_fw)
+            self.logger.debug("Theta step count forward: {}".format(ref_step_count_fw))
 
             ref_step_count_bw_1 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, True, STEPS_IN_STATE, 50)
             # find the sensor trailing edge in theta-
@@ -117,7 +115,7 @@ class MotionPlanner:
 
             # move to the middle of the leading and trailing edges
             count_mid = int(ref_step_count_bw / 2)
-            self.logger.debug("Moving to theta mid point. Steps to middle:", count_mid)
+            self.logger.debug("Moving to theta mid point. Steps to middle: {}".format(count_mid))
             for i in range(count_mid):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
                 time.sleep(MIN_STEP_DELAY)
@@ -150,7 +148,7 @@ class MotionPlanner:
         steps = (steps_t, steps_r)
         
         self.logger.debug("pos start, end: {} -> {}".format(self.current_position, position_next))
-        self.logger.debug("steps:", steps)
+        self.logger.debug("steps: {}".format(steps))
         
         return steps
     
