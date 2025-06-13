@@ -1,6 +1,10 @@
 #!/bin/sh
 # launcher.sh
-# navigate to home directory, then to this directory, then execute python script, then back home
+#
+# add to cron with
+# crontab -e
+# and add the following line:
+# @reboot sh /home/<user./launcher.sh >/home/<user>/logs/cronlog 2>&1
 
 # sleep a bit to allow network to connect
 sleep 30
