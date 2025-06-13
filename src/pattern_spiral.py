@@ -56,3 +56,5 @@ if __name__ == "__main__":
     p = PatternSpiral()
     for move in p.get_pattern():
         print(move)
+
+    print(len(p.get_pattern()))

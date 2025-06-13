@@ -34,11 +34,13 @@ import math
 import time
 from datetime import datetime, timedelta
 from constants import *
+import logging
 
 class MotionPlanner:
 
     motors = None
     current_position = (0, 0) # (theta, rho)
+    logger = logging.getLogger(__name__)
 
     def __init__(self, motors):
         self.motors = motors
@@ -60,10 +62,10 @@ class MotionPlanner:
             # check for reference sensor
             if self.motors.is_reference_sensor_triggered() == desired_state:
                 in_state_count += 1
-                print(".", end='', flush=True)
+                self.logger.debug(".", end='', flush=True)
             # steps in desired state met, return
             if in_state_count >= steps_in_state:
-                print("Found ref:{} - {}{}".format(desired_state, ax, dir))
+                self.logger.debug("Found ref:{} - {}{}".format(desired_state, ax, dir))
                 return step_count
             time.sleep(MIN_STEP_DELAY)
         raise Exception("Error during reference routine. could not find reference={} before exceeding step limit, moving axis {}".format(desired_state, ax))
@@ -86,36 +88,36 @@ class MotionPlanner:
                 # check for reference sensor
                 if self.motors.is_reference_sensor_triggered():
                     in_state_count += 1
-                    print(".", end='', flush=True)
+                    self.logger.debug(".", end='', flush=True)
                 # steps in desired state met
                 if in_state_count >= STEPS_IN_STATE:
-                    print("Found theta+")
+                    self.logger.debug("Found theta+")
                     found_reference = True
                     break
                 time.sleep(MIN_STEP_DELAY)
 
             if not found_reference:
                 # increment rho
-                print("rho step out")
+                self.logger.debug("rho step out")
                 for i in range(R_STEP_INC):
                     self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
                     time.sleep(MIN_STEP_DELAY)
 
         if found_reference:        
-            print("Ref found... refining position")
+            self.logger.debug("Ref found... refining position")
             # find the sensor trailing edge in theta+
             ref_step_count_fw = self._do_simple_reference_move(axis.THETA, direction.FORWARD, False, STEPS_IN_STATE, 500)
-            print("Theta step count forward:", ref_step_count_fw)
+            self.logger.debug("Theta step count forward:", ref_step_count_fw)
 
             ref_step_count_bw_1 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, True, STEPS_IN_STATE, 50)
             # find the sensor trailing edge in theta-
             ref_step_count_bw_2 = self._do_simple_reference_move(axis.THETA, direction.BACKWARD, False, STEPS_IN_STATE, 500)
             ref_step_count_bw = ref_step_count_bw_1 + ref_step_count_bw_2
-            print("Theta step count reverse: {} = {}+{}".format(ref_step_count_bw, ref_step_count_bw_1, ref_step_count_bw_2))
+            self.logger.debug("Theta step count reverse: {} = {}+{}".format(ref_step_count_bw, ref_step_count_bw_1, ref_step_count_bw_2))
 
             # move to the middle of the leading and trailing edges
             count_mid = int(ref_step_count_bw / 2)
-            print("Moving to theta mid point. Steps to middle:", count_mid)
+            self.logger.debug("Moving to theta mid point. Steps to middle:", count_mid)
             for i in range(count_mid):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (True, False))
                 time.sleep(MIN_STEP_DELAY)
@@ -123,18 +125,18 @@ class MotionPlanner:
             if not self.motors.is_reference_sensor_triggered():
                 raise Exception("Ref sensor not found after moving to Theta mid point.")
 
-            print("Finding rho trailing edge")
+            self.logger.debug("Finding rho trailing edge")
             # find the sensor trailing edge in rho
             self._do_simple_reference_move(axis.RHO, direction.BACKWARD, False, STEPS_IN_STATE, 500)
 
             # move rho to the limit
-            print("Moving rho to limit")
+            self.logger.debug("Moving rho to limit")
             for i in range(R_STEPS_TO_LIMIT):
                 self._play_both_axis_step((direction.FORWARD, direction.FORWARD), (False, True))
                 time.sleep(MIN_STEP_DELAY)
             
             self.current_position = (0, AXIS_MAX_R)
-            print("Referencing complete.")
+            self.logger.info("Referencing complete.")
         else:
             raise Exception("Reference sensor not found before timeout")
 
@@ -147,8 +149,8 @@ class MotionPlanner:
         steps_r = int(pos_change[1] / AXIS_STEP_R)
         steps = (steps_t, steps_r)
         
-        print("pos start, end: {} -> {}".format(self.current_position, position_next))
-        print("steps:", steps)
+        self.logger.debug("pos start, end: {} -> {}".format(self.current_position, position_next))
+        self.logger.debug("steps:", steps)
         
         return steps
     
@@ -230,8 +232,6 @@ class MotionPlanner:
         
         if step[1]:
             rho_count += 1 if dir[1] == direction.FORWARD else -1
-
-        #print(1 if step[0] else 0, rho_count)
 
         rho_direction = direction.FORWARD if rho_count >= 0 else direction.BACKWARD
         rho_count = abs(rho_count)

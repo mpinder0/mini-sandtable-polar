@@ -20,26 +20,30 @@ from motion_planner import MotionPlanner
 #from pattern_circle import PatternCircle
 from pattern_spiral import PatternSpiral
 from pattern_radial_sweep import PatternRadialSweep
+import logging
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 motors = MotorControl()
 planner = MotionPlanner(motors)
 
-print("Referenceing...")
+logger.info("Referenceing...")
 # Zero the motors
 planner.reference_routine()
 
-print("Move to the center...")
+logger.info("Move to the center...")
 move = planner.get_steps_for_move((0, 0))
 planner.play_move(move)
 
-print("Loading patterns...")
+logger.info("Loading patterns...")
 # load a pattern
 radial = PatternRadialSweep(1)
 spiral = PatternSpiral()
 pattern_radial = radial.get_pattern()
 pattern_spiral = spiral.get_pattern()
 
-print("Pattern loaded. Executing...")
+logger.info("Pattern loaded. Executing...")
 # Ececute the pattern
 while True:
     planner.play(pattern_radial)
