@@ -12,7 +12,7 @@ Theta step size - probaby multiples of axis step size.
 from constants import *
 import position_helper
 
-T_DEG_PER_STEP = 1
+T_DEG_PER_STEP = 45
 T_RAD_PER_STEP = position_helper.deg_to_rad(T_DEG_PER_STEP)
 
 R_INCREMENT_RATE_COMPLETE = 4 # mm per rotation
