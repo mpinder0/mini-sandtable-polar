@@ -15,6 +15,7 @@
     - (callback?) execute motor action
 """
 
+from constants import axis
 from motor_control import MotorControl
 from motion_planner import MotionPlanner
 from pattern_spiral import PatternSpiral
@@ -38,8 +39,8 @@ planner.play_move(move)
 
 logger.info("Loading patterns...")
 # load a pattern
-zigza_t = PatternZigzag(ax='THETA', start=0.5, size=1)
-zigza_r = PatternZigzag(ax='RHO', start=25, size=50)
+zigza_t = PatternZigzag(ax=axis.THETA, start=0.5, size=1)
+zigza_r = PatternZigzag(ax=axis.RHO, start=25, size=50)
 radial = PatternRadialSweep(1)
 spiral = PatternSpiral()
 
