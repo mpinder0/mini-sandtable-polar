@@ -17,9 +17,9 @@
 
 from motor_control import MotorControl
 from motion_planner import MotionPlanner
-#from pattern_circle import PatternCircle
 from pattern_spiral import PatternSpiral
 from pattern_radial_sweep import PatternRadialSweep
+from pattern_zigzag import PatternZigzag
 import logging
 logger = logging.getLogger(__name__)
 
@@ -38,13 +38,15 @@ planner.play_move(move)
 
 logger.info("Loading patterns...")
 # load a pattern
+zigza_t = PatternZigzag(ax='THETA', start=0.5, size=1)
+zigza_r = PatternZigzag(ax='RHO', start=25, size=50)
 radial = PatternRadialSweep(1)
 spiral = PatternSpiral()
-pattern_radial = radial.get_pattern()
-pattern_spiral = spiral.get_pattern()
 
 logger.info("Pattern loaded. Executing...")
 # Ececute the pattern
 while True:
-    planner.play(pattern_radial)
-    planner.play(pattern_spiral)
+    planner.play(zigza_t.get_pattern())
+    planner.play(radial.get_pattern())
+    planner.play(zigza_r.get_pattern())
+    planner.play(spiral.get_pattern())
