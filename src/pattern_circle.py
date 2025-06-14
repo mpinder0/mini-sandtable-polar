@@ -16,6 +16,7 @@ class PatternCircle:
     pattern = []
     
     def __init__(self, n_rotations):
+        self.pattern = []
         self._generate(n_rotations)
     
     def _generate(self, n_rotations):

@@ -27,6 +27,7 @@ class PatternSpiral:
     pattern = []
     
     def __init__(self, r_reverse=False):
+        self.pattern = []
         self._generate(r_reverse)
     
     def _generate(self, r_reverse):

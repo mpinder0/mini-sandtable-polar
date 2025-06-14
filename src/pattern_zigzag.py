@@ -25,6 +25,7 @@ class PatternZigzag:
 
     def __init__(self, ax=axis.THETA, start=0.5, size=1):
         self.ax = ax
+        self.pattern = []
 
         self.start = start
         self.oscillate_min = start - size / 2
@@ -78,6 +79,6 @@ if __name__ == "__main__":
         print(move)
 
     print("Zigzag in RHO axis:")
-    p = PatternZigzag(ax=axis.RHO, start=25, size=50)
-    for move in p.get_pattern():
+    p2 = PatternZigzag(ax=axis.RHO, start=25, size=50)
+    for move in p2.get_pattern():
         print(move)

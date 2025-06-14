@@ -15,6 +15,7 @@ class PatternRadialSweep:
     pattern = []
     
     def __init__(self, n_rotations=1):
+        self.pattern = []
         self._generate(n_rotations)
     
     def _generate(self, n_rotations):
