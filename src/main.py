@@ -45,9 +45,10 @@ radial = PatternRadialSweep(1)
 spiral = PatternSpiral()
 
 logger.info("Pattern loaded. Executing...")
+planner.play(zigzag_t.get_pattern())
 # Ececute the pattern
-while True:
-    planner.play(zigzag_t.get_pattern())
-    planner.play(radial.get_pattern())
-    planner.play(zigzag_r.get_pattern())
-    planner.play(spiral.get_pattern())
+#while True:
+#    planner.play(zigzag_t.get_pattern())
+#    planner.play(radial.get_pattern())
+#    planner.play(zigzag_r.get_pattern())
+#    planner.play(spiral.get_pattern())
