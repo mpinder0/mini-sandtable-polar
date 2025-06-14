@@ -1,7 +1,7 @@
 from constants import *
 import position_helper
 
-ZIGZAGS_IN_FULL_TRAVEL = 8  # Number of zigzags in full travel
+ZIGZAGS_IN_FULL_TRAVEL = 12  # Number of zigzags in full travel
 
 # ZigZag THETA
 # - Rho start: 0
