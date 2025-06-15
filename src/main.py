@@ -39,7 +39,8 @@ planner.play_move(move)
 
 logger.info("Loading patterns...")
 # load a pattern
-zigzag_t = PatternZigzag(ax=axis.THETA, start=0.5, size=1)
+zigzag_t1 = PatternZigzag(ax=axis.THETA, start=0.5, size=1)
+zigzag_t2 = PatternZigzag(ax=axis.THETA, start=3.6416, size=1)
 zigzag_r = PatternZigzag(ax=axis.RHO, start=25, size=50)
 radial = PatternRadialSweep(1)
 spiral = PatternSpiral()
@@ -47,7 +48,8 @@ spiral = PatternSpiral()
 logger.info("Pattern loaded. Executing...")
 # Ececute the pattern
 while True:
-    planner.play(zigzag_t.get_pattern())
+    planner.play(zigzag_t1.get_pattern())
+    planner.play(zigzag_t2.get_pattern())
     planner.play(radial.get_pattern())
     planner.play(zigzag_r.get_pattern())
     planner.play(spiral.get_pattern())
