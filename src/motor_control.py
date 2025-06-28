@@ -48,7 +48,6 @@ class MotorControl:
         # Wait for the minimum step delay before stepping again
         while (datetime.now() - self.theta_timestamp) < timedelta(seconds=MIN_STEP_DELAY):
             time.sleep(0.001)
-            print(".")
         
         if AXIS_T_INVERT_DIR:
             reverse = reverse == False
@@ -56,14 +55,11 @@ class MotorControl:
         m = self.kit.stepper1
         self._stepper_step(m, reverse)
         self.theta_timestamp = datetime.now()
-        print(self.theta_timestamp)
 
     def rho_step(self, reverse=False):
         # Wait for the minimum step delay before stepping again
         while (datetime.now() - self.rho_timestamp) < timedelta(seconds=MIN_STEP_DELAY):
             time.sleep(0.001)
-            print(".")
-        # Invert direction if configured
         
         if AXIS_R_INVERT_DIR:
             reverse = reverse == False
@@ -71,7 +67,6 @@ class MotorControl:
         m = self.kit.stepper2
         self._stepper_step(m, reverse)
         self.rho_timestamp = datetime.now()
-        print(self.rho_timestamp)
     
     def is_reference_sensor_triggered(self):
         # Sensor LOW when triggered. Low to return True.
