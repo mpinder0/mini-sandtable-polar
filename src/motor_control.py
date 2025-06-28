@@ -74,22 +74,26 @@ class MotorControl:
 
 if __name__ == "__main__":
     mc = MotorControl()    
-
-    print("Stepping Theta 500 Forward times, 500 times Backward...")
-    for i in range(500):
-        mc.step(axis.THETA)
-        time.sleep(0.005)
-    for i in range(500):
-        mc.step(axis.THETA, reverse=True)
-        time.sleep(0.005)
     
-    print("Stepping rho 500 Forward times, 500 times Backward...")
-    for i in range(500):
+    step_delay = 0.005  # seconds
+    steps_t = 100
+    steps_r = 200
+
+    print("Stepping Theta {} times Forward, {} times Backward...".format(steps_t, steps_t))
+    for i in range(steps_t):
+        mc.step(axis.THETA)
+        time.sleep(step_delay)
+    for i in range(steps_t):
+        mc.step(axis.THETA, reverse=True)
+        time.sleep(step_delay)
+
+    print("Stepping Rho {} times Forward, {} times Backward...".format(steps_r, steps_r))
+    for i in range(steps_r):
         mc.step(axis.RHO)
-        time.sleep(0.005)
-    for i in range(500):
+        time.sleep(step_delay)
+    for i in range(steps_r):
         mc.step(axis.RHO, reverse=True)
-        time.sleep(0.005)
+        time.sleep(step_delay)
 
     mc.motors_release()
     print("Motors released.")
