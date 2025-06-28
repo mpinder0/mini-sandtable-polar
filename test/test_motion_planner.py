@@ -136,7 +136,7 @@ class TestMotionPlanner(unittest.TestCase):
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
         # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
-        results = (12,4)
+        results = (16,4)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -151,7 +151,7 @@ class TestMotionPlanner(unittest.TestCase):
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
         # Rho axis steps -2 * AXIS_GEAR_RATIO_R + (Theta steps)
-        results = (12,0)
+        results = (16,0)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -166,7 +166,7 @@ class TestMotionPlanner(unittest.TestCase):
         }
         # Theta axis -2 * AXIS_GEAR_RATIO_T
         # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
-        results = (-12,0)
+        results = (-16,0)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -181,7 +181,7 @@ class TestMotionPlanner(unittest.TestCase):
         }
         # Theta axis -2 * AXIS_GEAR_RATIO_T
         # Rho axis steps -2 * AXIS_GEAR_RATIO_R + (Theta steps)
-        results = (-12,-4)
+        results = (-16,-4)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
@@ -197,7 +197,7 @@ class TestMotionPlanner(unittest.TestCase):
         }
         # Theta axis 2 * AXIS_GEAR_RATIO_T
         # Rho axis steps 2 * AXIS_GEAR_RATIO_R + (Theta steps)
-        results = (12,2)
+        results = (16,2)
         self.motors.theta_count = 0
         self.motors.rho_count = 0
         self.planner.play_move(instructions)
