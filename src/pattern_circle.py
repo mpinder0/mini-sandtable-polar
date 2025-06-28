@@ -37,4 +37,3 @@ if __name__ == "__main__":
 
     count = len(p.get_pattern())
     print(str(count) + " moves generated.")
-    print("will take " + str(count * TIME_STEP_S) + " seconds to execute.")
