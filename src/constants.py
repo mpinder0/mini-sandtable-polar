@@ -12,7 +12,7 @@ class direction(Enum):
 PI = 3.141592653589793
 
 TIME_STEP_S = 0.015 # seconds, 15 ms time step for the motion planner
-MIN_STEP_DELAY = 0.003 # Minimum delay between steps in sections, to allow the motor to step properly
+MIN_STEP_DELAY = 0.006 # Minimum delay between steps in sections, to allow the motor to step properly
 
 # V2 hardware - NEMA 17 motors
 AXIS_MAX_R = 71.5 # mm, min always 0
