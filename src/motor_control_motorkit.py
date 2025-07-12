@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 
 REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
-class MotorControl:
+class MotorControlMotorKit:
     
     kit = None
     theta_timestamp = datetime.now()
@@ -73,7 +73,7 @@ class MotorControl:
         return GPIO.input(REFERENCE_SENSOR_PIN) == False
 
 if __name__ == "__main__":
-    mc = MotorControl()    
+    mc = MotorControlMotorKit()    
     
     step_delay = 0.010  # seconds
     steps_t = 100

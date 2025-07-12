@@ -16,7 +16,7 @@
 """
 
 from constants import axis
-from motor_control import MotorControl
+from motor_control_io import MotorControlIO
 from motion_planner import MotionPlanner
 from pattern_spiral import PatternSpiral
 from pattern_radial_sweep import PatternRadialSweep
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', filename='plotter.log')
 
-motors = MotorControl()
+motors = MotorControlIO()
 planner = MotionPlanner(motors)
 
 logger.info("Referenceing...")
