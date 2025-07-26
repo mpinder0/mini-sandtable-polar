@@ -98,6 +98,7 @@ class MotorControlIO:
 if __name__ == "__main__":
     mc = MotorControlIO()
 
+    '''
     for i in range(20):
         print("Enable ON")
         mc._motors_set_enable(True)
@@ -105,8 +106,8 @@ if __name__ == "__main__":
         print("Enable OFF")
         mc._motors_set_enable(False)
         time.sleep(2)
-
     '''
+
     step_delay = 0.050  # seconds
     steps_t = 100
     steps_r = 100
@@ -132,4 +133,3 @@ if __name__ == "__main__":
 
     mc.motors_release()
     print("Motors released.")
-    '''
