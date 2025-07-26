@@ -15,11 +15,11 @@ REFERENCE_SENSOR_PIN = 4 # GPIO pin for the reference sensor
 
 # Motor control pins
 THETA_STEP_PIN = 17 # Theta step when True
-THETA_DIR_PIN = 27 # Theta direction - CW when True
-RHO_STEP_PIN = 22
-RHO_DIR_PIN = 23
+THETA_DIR_PIN = 22 # Theta direction - CW when True
+RHO_STEP_PIN = 10
+RHO_DIR_PIN = 11
 
-MOTORS_ENABLE_PIN = 24
+MOTORS_ENABLE_PIN = 5
 
 STEP_PULSE_WIDTH = 0.001 # seconds, pulse width for the step signal
 
@@ -96,4 +96,30 @@ class MotorControlIO:
         return GPIO.input(REFERENCE_SENSOR_PIN) == False
 
 if __name__ == "__main__":
-    pass
+    mc = MotorControlIO()
+
+    step_delay = 0.010  # seconds
+    steps_t = 100
+    steps_r = 100
+
+    print("Stepping Theta {} times Forward, {} times Backward...".format(steps_t, steps_t))
+    for i in range(steps_t):
+        mc.step(axis.THETA)
+        time.sleep(step_delay)
+    for i in range(steps_t):
+        mc.step(axis.THETA, reverse=True)
+        time.sleep(step_delay)
+
+    mc.motors_release()
+    print("Motors released.")
+
+    print("Stepping Rho {} times Forward, {} times Backward...".format(steps_r, steps_r))
+    for i in range(steps_r):
+        mc.step(axis.RHO)
+        time.sleep(step_delay)
+    for i in range(steps_r):
+        mc.step(axis.RHO, reverse=True)
+        time.sleep(step_delay)
+
+    mc.motors_release()
+    print("Motors released.")
