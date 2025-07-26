@@ -98,7 +98,7 @@ class MotorControlIO:
 if __name__ == "__main__":
     mc = MotorControlIO()
 
-    step_delay = 0.010  # seconds
+    step_delay = 0.050  # seconds
     steps_t = 100
     steps_r = 100
 
